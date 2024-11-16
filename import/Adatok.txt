@@ -1,0 +1,3 @@
+Fejlesztők fizetése életkor és nyelv alapján:
+    prog.csv
+
