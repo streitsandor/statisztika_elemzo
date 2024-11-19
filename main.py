@@ -7,7 +7,7 @@ from icecream import ic
 
 
 def main():
-    diagramok = {1: diagram1, 2: diagram2}  # Választható diagramok
+    diagramok = {1: diagram1, 2: diagram2, 3: diagramAO}  # Választható diagramok
     plt.style.use("fivethirtyeight")
     plt.tight_layout()
 
@@ -19,6 +19,7 @@ def main():
                     ==============================================
                     1. Fejlesztők fizetése életkor szerint
                     2. Placeholder
+                    3. A népesség gazdasági aktivitása korcsoportok szerint
                     ==============================================
                     
                     Válasszon egy diagramot: """
@@ -50,6 +51,22 @@ def diagram1():
     plt.legend()
     plt.show()
 
+def diagramAO():
+    df = pd.read_csv("import/stadat-mun0005-20.1.1.5-hu.csv",encoding="ansi",delimiter=';') #read the csv file, with the correct encoding and separator
+    title = list(df)[0] #get the title from the dataset
+
+    new_header = df.iloc[0] #grab the first row for the header
+    df = df[1:] #take the data less the header row
+    df.columns = new_header #set the header row as the df header
+
+    subset = df.iloc[df['Korcsoport, éves'].ne('Együtt').idxmax()-1:df['Korcsoport, éves'].eq('Összesen').idxmax()-1] #create a new dataset for the data
+
+#let's create the diagram from the subset
+    plt.plot(subset['Korcsoport, éves'],subset['Foglalkoztatottak, ezer fõ, 2009'].str.replace(',','.').str.replace(' ','').astype(float).fillna(0.0)) 
+    plt.title(title)
+    plt.xlabel('Korcsoport, éves')
+    plt.ylabel('Foglalkoztatottak, ezer fõ, 2009')
+    plt.show()
 
 def diagram2():
     print("Placeholder!")
