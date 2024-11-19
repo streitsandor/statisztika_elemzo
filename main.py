@@ -52,21 +52,21 @@ def diagram1():
     plt.show()
 
 def diagramAO():
-    df = pd.read_csv("import/stadat-mun0005-20.1.1.5-hu.csv",encoding="ansi",delimiter=';') #read the csv file, with the correct encoding and separator
-    title = list(df)[0] #get the title from the dataset
+    df = pd.read_csv("import/stadat-mun0005-20.1.1.5-hu.csv",encoding="ansi",delimiter=';') #az alap csv fájl beolvasása egy dataset-be, a megfelelő karakter kódolással és szeparátorral
+    title = list(df)[0] #a cím kiolvasása a dataset-ből
 
-    new_header = df.iloc[0] #grab the first row for the header
-    df = df[1:] #take the data less the header row
-    df.columns = new_header #set the header row as the df header
+    new_header = df.iloc[0] #a fejléc kiválasztása az eredeti dataset-ből
+    df = df[1:] #az eredeti dataset módosítása, hogy ne legyen benne a címet tartalmazó sor
+    df.columns = new_header #az eredeti dataset módosítása, hogy a fejléce az új fejléc legyen
 
-    subset = df.iloc[df['Korcsoport, éves'].ne('Együtt').idxmax()-1:df['Korcsoport, éves'].eq('Összesen').idxmax()-1] #create a new dataset for the data
+    subset = df.iloc[df['Korcsoport, éves'].ne('Együtt').idxmax()-1:df['Korcsoport, éves'].eq('Összesen').idxmax()-1] #egy rész dataset készítése, ami tartalamzza a szükséges adatokat
 
-#let's create the diagram from the subset
-    plt.plot(subset['Korcsoport, éves'],subset['Foglalkoztatottak, ezer fõ, 2009'].str.replace(',','.').str.replace(' ','').astype(float).fillna(0.0)) 
-    plt.title(title)
-    plt.xlabel('Korcsoport, éves')
-    plt.ylabel('Foglalkoztatottak, ezer fõ, 2009')
-    plt.show()
+#a diagram összeállítása
+    plt.plot(subset['Korcsoport, éves'],subset['Foglalkoztatottak, ezer fõ, 2009'].str.replace(',','.').str.replace(' ','').astype(float).fillna(0.0)) #a diagram adatainak megadása, a szövegként levő értékek float típusra konvertálásával
+    plt.title(title) #a diagram címének megadása
+    plt.xlabel('Korcsoport, éves') #az X tengely cimkéje
+    plt.ylabel('Foglalkoztatottak, ezer fõ, 2009') #az Y tengely cimkéje
+    plt.show() #a diagram megjelenítése
 
 def diagram2():
     print("Placeholder!")
