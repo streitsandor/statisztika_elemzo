@@ -15,7 +15,7 @@ def clear_console() -> None:  # konzol tisztítása
 
 def main() -> None:
     clear_console()
-    diagramok = {1: diagramSS, 2: diagramOA}  # Választható diagramok
+    diagramok = {1: diagramSS, 2: diagramOA, 3: diagramET}  # Választható diagramok
     plt.tight_layout()
 
     while True:
@@ -28,6 +28,7 @@ def main() -> None:
                         
                         1. Átlagkereset foglalkozás szerint - Teljes munkaidő (bruttó)
                         2. A népesség gazdasági aktivitása korcsoportok szerint
+                        3. Magyar népességszámlálás az elmúlt 20 évben
                     ==============================================
                     
                     Válasszon egy diagramot: """
@@ -325,6 +326,28 @@ def getRowsSum(sDataFrame, columnName, rows, sumRowName):
 
 # STOP---OA-------------------------------------------------------------------------------------------
 
+
+# START---ET-------------------------------------------------------------------------------------------
+def diagramET() -> None:
+    plt.style.use("bmh")
+
+    beolvasott_adatok = pd.read_csv(
+        "import/nepessegszamlalas1.csv", encoding="UTF-8", sep=";"
+    )
+    plt.plot(beolvasott_adatok["year"], beolvasott_adatok["population"], marker="o")
+
+    plt.xlabel("Év")
+    plt.ylabel("Népességszám")
+
+    plt.title("Magyar népességszámlálás az elmúlt 20 évben")
+    plt.ticklabel_format(style="plain", axis="y")
+    plt.gca().yaxis.set_major_formatter(FuncFormatter(integer_formazo))
+    plt.xticks(beolvasott_adatok["year"])
+    plt.gca().set_facecolor("#e0f7fa")
+    plt.show()
+
+
+# STOP---ET-------------------------------------------------------------------------------------------
 
 if __name__ == "__main__":  # program belépő függvénye
     rc = 1
