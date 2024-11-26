@@ -2,7 +2,6 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 from icecream import ic
-import seaborn as sns
 import numpy as np
 
 # print(plt.style.available) # stílus keresésre, ha kell
@@ -112,7 +111,7 @@ def makePlotDiagram(xAxis,yAxis,xLabel,yLabel,title,suptitle,xticks):
     plt.show()
     return
 
-def makeRegressionDiagram(sDataFrame,xAxis,yAxis) -> None: 
+def makeRegressionDiagram(sDataFrame, xAxis, yAxis) -> None: 
     x = sDataFrame[xAxis].values
     x = np.array(x, dtype=float)
 
@@ -122,13 +121,31 @@ def makeRegressionDiagram(sDataFrame,xAxis,yAxis) -> None:
     df = pd.DataFrame({'Array1': x, 'Array2': y})
 
     plt.figure(figsize=(10, 6))
-    sns.regplot(x='Array1', y='Array2', data=df, ci=None, label=xAxis + ' <--> ' + yAxis, line_kws={'color': 'blue'})
-    sns.regplot(x='Array2', y='Array1', data=df, ci=None, label=yAxis + ' <--> ' + xAxis, line_kws={'color': 'red'})
+
+    # Fit the linear model for Array1 -> Array2
+    coefficients1 = np.polyfit(df['Array1'], df['Array2'], 1)
+    polynomial1 = np.poly1d(coefficients1)
+    trendline1 = polynomial1(df['Array1'])
+
+    # Fit the linear model for Array2 -> Array1
+    coefficients2 = np.polyfit(df['Array2'], df['Array1'], 1)
+    polynomial2 = np.poly1d(coefficients2)
+    trendline2 = polynomial2(df['Array2'])
+
+    # Plot the data
+    plt.scatter(df['Array1'], df['Array2'], color='blue', label=xAxis + ' <--> ' + yAxis)
+    plt.scatter(df['Array2'], df['Array1'], color='red', label=yAxis + ' <--> ' + xAxis)
+
+    # Plot the regression lines
+    plt.plot(df['Array1'], trendline1, color='blue')
+    plt.plot(df['Array2'], trendline2, color='red')
+
     plt.legend()
     plt.title('Lineáris regressziós diagram')
     plt.xlabel(xAxis)
     plt.ylabel(yAxis)
     plt.show()
+
 
 def getDataFrameTitle(sDataFrame):
     return(sDataFrame.columns[0])
