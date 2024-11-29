@@ -6,8 +6,6 @@ from matplotlib.ticker import FuncFormatter
 from icecream import ic
 import numpy as np
 
-# print(plt.style.available)  # stílus keresésre, ha kell
-
 
 def clear_console() -> None:  # konzol tisztítása
     os.system("cls" if os.name == "nt" else "clear")
@@ -15,7 +13,14 @@ def clear_console() -> None:  # konzol tisztítása
 
 def main() -> None:
     clear_console()
-    diagramok = {1: diagramSS, 2: diagramOA, 3: diagramET}  # Választható diagramok
+
+    # print(plt.style.available)  # stílus keresésre, ha kell
+    diagramok = {  # Választható diagramok
+        1: diagramSS,
+        2: diagramOA,
+        3: diagramET,
+        4: diagramPK,
+    }
     plt.tight_layout()
 
     while True:
@@ -29,6 +34,7 @@ def main() -> None:
                         1. Átlagkereset foglalkozás szerint - Teljes munkaidő (bruttó)
                         2. A népesség gazdasági aktivitása korcsoportok szerint
                         3. Magyar népességszámlálás az elmúlt 20 évben
+                        4. Használt lakások ára 2007 és 2023 között
                     ==============================================
                     
                     Válasszon egy diagramot: """
@@ -348,6 +354,25 @@ def diagramET() -> None:
 
 
 # STOP---ET-------------------------------------------------------------------------------------------
+
+
+# START---PK-------------------------------------------------------------------------------------------
+def diagramPK() -> None:
+    plt.style.use("bmh")
+    lakasok = pd.read_csv("import/lakasarak.csv", encoding="UTF-8", sep=";")
+    plt.plot(lakasok.year, lakasok.price1, label="Családi ház", marker="o")
+    plt.plot(lakasok.year, lakasok.price2, label="Többlakásos", marker="o")
+    plt.plot(lakasok.year, lakasok.price3, label="Lakótelep", marker="o")
+
+    plt.xlabel("Ár, millió")
+    plt.ylabel("Év")
+
+    plt.title("Használt lakások ára 2007 és 2023 között")
+    plt.legend()
+    plt.show()
+
+
+# STOP---PK-------------------------------------------------------------------------------------------
 
 if __name__ == "__main__":  # program belépő függvénye
     rc = 1

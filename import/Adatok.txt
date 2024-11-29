@@ -1,7 +1,0 @@
-Fejlesztők fizetése életkor és nyelv alapján:
-    prog.csv
-
-Átlagkereset foglalkozás szerint - Teljes munkaidő (bruttó)
-    stadat-mun0208-20.1.1.52-hu.csv - eredeti
-    stadat-mun0208-20.1.1.52-hu_tisztitott.csv - felhasznált
-    stadat-mun0208-20.1.1.52-hu_rovid.csv - teszt
