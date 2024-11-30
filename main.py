@@ -31,7 +31,7 @@ def main() -> None:
                     ==============================================
                         0. Kilépés
                         
-                        1. Átlagkereset foglalkozás szerint - Teljes munkaidő (bruttó)
+                        1. Átlagkereset foglalkozás szerint - Teljes munkaidő
                         2. A népesség gazdasági aktivitása korcsoportok szerint
                         3. Magyar népességszámlálás az elmúlt 20 évben
                         4. Használt lakások ára 2007 és 2023 között
@@ -67,9 +67,9 @@ def lista_darabolas(bemeneti_lista: list, darab_meret: int) -> list:  # lista da
 
 def diagramSS() -> None:
     plt.style.use("seaborn-v0_8-dark")
-    plt.suptitle("Átlagkereset foglalkozás szerint - Teljes munkaidő (bruttó)")
+    plt.suptitle("Átlagkereset foglalkozás szerint - Teljes munkaidő")
 
-    alap_param = {"xlabel": "Év", "ylabel": "Kereset"}
+    alap_param = {"xlabel": "Év", "ylabel": "Kereset (bruttó)"}
     csv_adatok = pd.read_csv(
         "import/stadat-mun0208-20.1.1.52-hu_tisztitott.csv", encoding="UTF-8"
     )
@@ -364,8 +364,8 @@ def diagramPK() -> None:
     plt.plot(lakasok.year, lakasok.price2, label="Többlakásos", marker="o")
     plt.plot(lakasok.year, lakasok.price3, label="Lakótelep", marker="o")
 
-    plt.xlabel("Ár, millió")
-    plt.ylabel("Év")
+    plt.xlabel("Év")
+    plt.ylabel("Ár, millió")
 
     plt.title("Használt lakások ára 2007 és 2023 között")
     plt.legend()
