@@ -6,6 +6,9 @@ from matplotlib.ticker import FuncFormatter
 from icecream import ic
 import numpy as np
 
+szamhiba = "Nem megfelelő számot adott meg!"
+karakterhiba = "Érvénytelen karakter. Kérem számot adjon meg!"
+
 
 def clear_console() -> None:  # konzol tisztítása
     os.system("cls" if os.name == "nt" else "clear")
@@ -48,10 +51,10 @@ def main() -> None:
                 diagramok[statisztika_szama]()
             else:
                 clear_console()
-                print("Nem megfelelő számot adott meg!")
+                print(szamhiba)
         except ValueError:
             clear_console()
-            print("Érvénytelen karakter. Kérem számot adjon meg!")
+            print(karakterhiba)
 
 
 def integer_formazo(x: int, pos) -> str:  # integer formázó
@@ -110,11 +113,11 @@ def diagramSS() -> None:
                 diagramSS_kirajzolo(uj_param)
             else:
                 clear_console()
-                print("Nem megfelelő számot adott meg!")
+                print(szamhiba)
 
         except ValueError:
             clear_console()
-            print("Érvénytelen karakter. Kérem számot adjon meg!")
+            print(karakterhiba)
 
 
 def diagramSS_kirajzolo(parameter) -> None:  # kiválasztott tábla rajzolása
@@ -203,7 +206,7 @@ def diagramOA() -> None:
     while True:
         try:
             print(
-                f"""
+                """
                     **********************************************
                         0. Vissza a főmenübe
 
@@ -218,7 +221,7 @@ def diagramOA() -> None:
                     """
                     Válassza ki a megjelenítendő diagramot: """
                 )
-            )            
+            )
 
             if alszam == 0:
                 clear_console()
@@ -254,11 +257,12 @@ def diagramOA() -> None:
                 )
             else:
                 clear_console()
-                print("Nem megfelelő számot adott meg!")
+                print(szamhiba)
 
         except ValueError:
             clear_console()
-            print("Érvénytelen karakter. Kérem számot adjon meg!")
+            print(karakterhiba)
+
 
 def getMergedDataFrame(sDataFrame1, sDataFrame2, columnNames):
     sDataFrame1.index = sDataFrame1.index.astype(int)
@@ -347,6 +351,8 @@ def getRowsSum(sDataFrame, columnName, rows, sumRowName):
         [summarizedRow], columns=sDataFrame.columns
     )  # a sor konvertálása DataFrame-re, és az oszlopok fejléceinek beállítása
     return summarizedRowDf
+
+
 # STOP---OA-------------------------------------------------------------------------------------------
 
 
