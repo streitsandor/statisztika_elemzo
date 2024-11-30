@@ -32,7 +32,7 @@ def main() -> None:
                         0. Kilépés
                         
                         1. Átlagkereset foglalkozás szerint - Teljes munkaidő
-                        2. A népesség gazdasági aktivitása korcsoportok szerint
+                        2. A nyugdíjas korcsoport aránya a népességben és foglalkoztatottsági rátája
                         3. Magyar népességszámlálás az elmúlt 20 évben
                         4. Használt lakások ára 2007 és 2023 között
                     ==============================================
@@ -179,15 +179,6 @@ def diagramOA() -> None:
     df1RetiredPeople = getRowsSum(
         df1, df1InspectedColumnName[0], df1InspectedAgeGroups, "retired"
     )  # a 65 és felettiek összesítése a táblázatból, ezt fogjuk ezután használni
-    makePlotDiagram(
-        df1RetiredPeople.columns[1:],
-        df1RetiredPeople.iloc[0, 1:],
-        "Év",
-        "Foglalkoztatási ráta, %, ",
-        "Férfiak és Nők",
-        df1MainTitle,
-        df1RetiredPeople.columns[1:],
-    )
 
     # ebben a DatFrame-ben az index tratalmazza a dátumokat, amik a diagram "X" tengelyének értékeit adják
     df2 = setRow2ColumnHeader(df2, 0)
@@ -202,27 +193,72 @@ def diagramOA() -> None:
     )  # csak az adott sorokat tartjuk meg, 2009-2023, mivel a foglalkoztatottsági táblázat is ezen időszakra van
     df2 = df2.set_index("Év, január 1.")
     df2.index = df2.index.astype(int)
-    makePlotDiagram(
-        df2.index,
-        df2["Korösszetétel: 65– éves, %"],
-        "Év",
-        "65 év felettiek aránya %-ban",
-        "",
-        df2MainTitle,
-        df2.index,
-    )
 
     mergedDataFrame = getMergedDataFrame(
         df1RetiredPeople.T[1:],
         df2,
         ["Foglalkoztatási ráta, 65-74 éves, %", "Korösszetétel: 65– éves, %"],
     )
-    makeRegressionDiagram(
-        mergedDataFrame,
-        "Foglalkoztatási ráta, 65-74 éves, %",
-        "Korösszetétel: 65– éves, %",
-    )
 
+    while True:
+        try:
+            print(
+                f"""
+                    **********************************************
+                        0. Vissza a főmenübe
+
+                        1. Foglalkoztatási ráta, 65-74 éves, %
+                        2. Korösszetétel: 65– éves, %
+                        3. Regressziós diagram
+                    **********************************************
+                """
+            )
+            alszam = int(
+                input(
+                    """
+                    Válassza ki a megjelenítendő diagramot: """
+                )
+            )            
+
+            if alszam == 0:
+                clear_console()
+                break
+            elif alszam == 1:
+                clear_console()
+                makePlotDiagram(
+                    df1RetiredPeople.columns[1:],
+                    df1RetiredPeople.iloc[0, 1:],
+                    "Év",
+                    "Foglalkoztatási ráta, %, ",
+                    "Férfiak és Nők",
+                    df1MainTitle,
+                    df1RetiredPeople.columns[1:],
+                )
+            elif alszam == 2:
+                clear_console()
+                makePlotDiagram(
+                    df2.index,
+                    df2["Korösszetétel: 65– éves, %"],
+                    "Év",
+                    "65 év felettiek aránya %-ban",
+                    "",
+                    df2MainTitle,
+                    df2.index,
+                )
+            elif alszam == 3:
+                clear_console()
+                makeRegressionDiagram(
+                    mergedDataFrame,
+                    "Foglalkoztatási ráta, 65-74 éves, %",
+                    "Korösszetétel: 65– éves, %",
+                )
+            else:
+                clear_console()
+                print("Nem megfelelő számot adott meg!")
+
+        except ValueError:
+            clear_console()
+            print("Érvénytelen karakter. Kérem számot adjon meg!")
 
 def getMergedDataFrame(sDataFrame1, sDataFrame2, columnNames):
     sDataFrame1.index = sDataFrame1.index.astype(int)
@@ -251,19 +287,12 @@ def makeRegressionDiagram(sDataFrame, xAxis, yAxis) -> None:
 
     df = pd.DataFrame({"Array1": x, "Array2": y})
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(15, 9))
 
-    # Fit the linear model for Array1 -> Array2
     coefficients1 = np.polyfit(df["Array1"], df["Array2"], 1)
     polynomial1 = np.poly1d(coefficients1)
     trendline1 = polynomial1(df["Array1"])
 
-    # Fit the linear model for Array2 -> Array1
-    coefficients2 = np.polyfit(df["Array2"], df["Array1"], 1)
-    polynomial2 = np.poly1d(coefficients2)
-    trendline2 = polynomial2(df["Array2"])
-
-    # Plot the data
     plt.scatter(
         df["Array1"],
         df["Array2"],
@@ -272,18 +301,8 @@ def makeRegressionDiagram(sDataFrame, xAxis, yAxis) -> None:
         alpha=0.75,
         label=xAxis + " <--> " + yAxis,
     )
-    plt.scatter(
-        df["Array2"],
-        df["Array1"],
-        edgecolor="black",
-        linewidth=1,
-        alpha=0.75,
-        label=yAxis + " <--> " + xAxis,
-    )
 
-    # Plot the regression lines
     plt.plot(df["Array1"], trendline1, color="blue")
-    plt.plot(df["Array2"], trendline2, color="red")
 
     plt.legend()
     plt.title("Lineáris regressziós diagram")
@@ -328,8 +347,6 @@ def getRowsSum(sDataFrame, columnName, rows, sumRowName):
         [summarizedRow], columns=sDataFrame.columns
     )  # a sor konvertálása DataFrame-re, és az oszlopok fejléceinek beállítása
     return summarizedRowDf
-
-
 # STOP---OA-------------------------------------------------------------------------------------------
 
 
@@ -365,7 +382,7 @@ def diagramPK() -> None:
     plt.plot(lakasok.year, lakasok.price3, label="Lakótelep", marker="o")
 
     plt.xlabel("Év")
-    plt.ylabel("Ár, millió")
+    plt.ylabel("Ár (millió)")
 
     plt.title("Használt lakások ára 2007 és 2023 között")
     plt.legend()
